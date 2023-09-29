@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	dPoPHeaderKey     = "DPoP"
+	DPoPHeaderKey     = "DPoP"
 	dPopError         = "invalid_dpop_proof"
 	dPopJwtHeaderType = "dpop+jwt"
 	DPopThumbprint    = "DPoPThumbprint"
