@@ -115,7 +115,7 @@ type dPoPRequest struct {
 }
 
 func checkDPop(h http.Handler, w http.ResponseWriter, r *http.Request) error {
-	dPopHeaders := r.Header.Values(dPoPHeaderKey)
+	dPopHeaders := r.Header.Values(DPoPHeaderKey)
 	if len(dPopHeaders) == 0 {
 		h.ServeHTTP(w, r) // call original
 		return nil
