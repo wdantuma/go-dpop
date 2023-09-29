@@ -110,7 +110,7 @@ func TestValidDPoPHeader(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "get")
 
-	req.Header.Set(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, true))
+	req.Header.Set(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, true))
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Context().Value(DPopThumbprint) == nil {
@@ -130,8 +130,8 @@ func TestMultipleDPopHeader(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "get")
 
-	req.Header.Add(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, true))
-	req.Header.Add(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, true))
+	req.Header.Add(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, true))
+	req.Header.Add(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, true))
 
 	handler := http.HandlerFunc(finalHandler)
 
@@ -146,7 +146,7 @@ func TestJWT(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "get")
 
-	req.Header.Set(dPoPHeaderKey, "Not wellformed JWT")
+	req.Header.Set(DPoPHeaderKey, "Not wellformed JWT")
 
 	handler := http.HandlerFunc(finalHandler)
 
@@ -160,7 +160,7 @@ func TestMissingClaims(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "get")
 
-	req.Header.Set(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", true, true))
+	req.Header.Set(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", true, true))
 
 	handler := http.HandlerFunc(finalHandler)
 
@@ -174,7 +174,7 @@ func TestWrongHeaderType(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "get")
 
-	req.Header.Set(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", "JWT", time.Now(), "", false, true))
+	req.Header.Set(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", "JWT", time.Now(), "", false, true))
 
 	handler := http.HandlerFunc(finalHandler)
 
@@ -188,7 +188,7 @@ func TestWrongMethod(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "post")
 
-	req.Header.Set(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, true))
+	req.Header.Set(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, true))
 
 	handler := http.HandlerFunc(finalHandler)
 
@@ -202,7 +202,7 @@ func TestWrongUri(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "gest")
 
-	req.Header.Set(dPoPHeaderKey, createDPoPHeader("http://test.com/notest", "get", dPopJwtHeaderType, time.Now(), "", false, true))
+	req.Header.Set(DPoPHeaderKey, createDPoPHeader("http://test.com/notest", "get", dPopJwtHeaderType, time.Now(), "", false, true))
 
 	handler := http.HandlerFunc(finalHandler)
 
@@ -217,7 +217,7 @@ func TestIssuedInFuture(t *testing.T) {
 	req := getRequest(t, "http://test.com/test", "get")
 
 	iat := time.Now().Add(time.Second)
-	req.Header.Set(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, iat, "", false, true))
+	req.Header.Set(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, iat, "", false, true))
 
 	handler := http.HandlerFunc(finalHandler)
 
@@ -232,7 +232,7 @@ func TestMissingJwk(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "get")
 
-	req.Header.Set(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, false))
+	req.Header.Set(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "", false, false))
 
 	handler := http.HandlerFunc(finalHandler)
 
@@ -247,7 +247,7 @@ func TestNonce(t *testing.T) {
 
 	req := getRequest(t, "http://test.com/test", "get")
 
-	req.Header.Set(dPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "Nonce not allowed", false, true))
+	req.Header.Set(DPoPHeaderKey, createDPoPHeader("http://test.com/test", "get", dPopJwtHeaderType, time.Now(), "Nonce not allowed", false, true))
 
 	handler := http.HandlerFunc(finalHandler)
 
