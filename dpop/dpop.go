@@ -10,13 +10,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"reflect"
 	"strings"
 	"time"
 
 	b64 "encoding/base64"
 
-	httphelper "github.com/zitadel/oidc/v3/pkg/http"
-	"github.com/zitadel/oidc/v3/pkg/oidc"
 	"gopkg.in/square/go-jose.v2"
 	"gopkg.in/square/go-jose.v2/jwt"
 )
@@ -156,11 +155,37 @@ func checkDPop(h http.Handler, w http.ResponseWriter, r *http.Request) error {
 	}
 }
 
+func MarshalJSON(w http.ResponseWriter, i any) {
+	MarshalJSONWithStatus(w, i, http.StatusOK)
+}
+
+func MarshalJSONWithStatus(w http.ResponseWriter, i any, status int) {
+	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(status)
+	if i == nil || (reflect.ValueOf(i).Kind() == reflect.Ptr && reflect.ValueOf(i).IsNil()) {
+		return
+	}
+	err := json.NewEncoder(w).Encode(i)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+type errorType string
+
+type Error struct {
+	Parent           error     `json:"-" schema:"-"`
+	ErrorType        errorType `json:"error" schema:"error"`
+	Description      string    `json:"error_description,omitempty" schema:"error_description,omitempty"`
+	State            string    `json:"state,omitempty" schema:"state,omitempty"`
+	redirectDisabled bool      `schema:"-"`
+}
+
 func DPoPInterceptor(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		err := checkDPop(h, w, r)
 		if err != nil {
-			httphelper.MarshalJSONWithStatus(w, &oidc.Error{ErrorType: dPopError, Description: err.Error()}, http.StatusBadRequest)
+			MarshalJSONWithStatus(w, &Error{ErrorType: dPopError, Description: err.Error()}, http.StatusBadRequest)
 		}
 	})
 }
