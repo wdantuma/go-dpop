@@ -96,11 +96,11 @@ func getThumbprint(webkey jose.JSONWebKey, alg jose.SignatureAlgorithm) ([]byte,
 
 	var hash crypto.Hash
 	switch alg {
-	case jose.ES256:
+	case jose.ES256, jose.RS256:
 		hash = crypto.SHA256
-	case jose.ES384:
+	case jose.ES384, jose.RS384:
 		hash = crypto.SHA384
-	case jose.ES512:
+	case jose.ES512, jose.RS512:
 		hash = crypto.SHA512
 	default:
 		return nil, errors.New("Unsupported algorithm")
