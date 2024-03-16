@@ -12,8 +12,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/zitadel/oidc/v3/pkg/oidc"
-
 	"gopkg.in/square/go-jose.v2"
 	"gopkg.in/square/go-jose.v2/jwt"
 )
@@ -70,7 +68,7 @@ func getRequest(t *testing.T, uri string, method string) *http.Request {
 
 func checkResult(t *testing.T, rr *httptest.ResponseRecorder, expectErrortype string, expectErrorDescription string, expectHttpStatus int) {
 	if expectHttpStatus != http.StatusOK {
-		result := oidc.Error{}
+		result := Error{}
 		err := json.Unmarshal(rr.Body.Bytes(), &result)
 		if err != nil {
 			t.Errorf("handler returned no json")
